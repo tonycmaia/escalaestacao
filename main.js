@@ -7,12 +7,14 @@ const btn = document.querySelector(".button-pes")
 function chamar (){
 
 let folgas1 = ['Folga','Folga','Trabalha','Trabalha','Trabalha','Folga','Folga','Trabalha','Trabalha','Trabalha','Folga','Folga','Trabalha','Trabalha','Trabalha','Folga','Folga','Trabalha','Trabalha','Trabalha','Folga','Folga','Trabalha','Trabalha','Trabalha','Folga','Trabalha','Trabalha'];
-let folgas2 = ["Trabalha", "Trabalha", ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga"];
+let folgas2 = ["Trabalha", "Trabalha" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga" ,"Trabalha" ,"Trabalha" ,"Trabalha" ,"Folga" ,"Folga"];
 let folgas3 = ["Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga"];
 let folgas4 = [" Folga", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha"];
 let folgas5 = ["Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha"];
 let folgasAdv = ["Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Trabalha", "Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Folga", "Trabalha", "Trabalha"];
   
+console.log("tamanho " + folgas2[12])
+
   let date  = new Date();
   let pes = document.querySelector("#end")
   let tipologia = document.querySelector(".tip")
@@ -41,8 +43,7 @@ let folgasAdv = ["Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Trabalha
 
 
 
-  console.log(tip)
-  console.log(salario)
+  
 
   let a = pes.value
     if(a){
@@ -52,8 +53,7 @@ let folgasAdv = ["Folga", "Folga", "Trabalha", "Trabalha", "Trabalha", "Trabalha
   }
   
   
-  console.log(date)
-console.log(date)
+ 
 let currYear = date.getFullYear()
 let currMonth = date.getMonth()
 

@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>Saldo de Folgas</title>
+    <style>
+        .extrato-container {
+            padding: 20px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .extrato-title {
+            color: #3f66bb;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .extrato-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .extrato-item {
+            background: #f9f9f9;
+            border-left: 5px solid #3f66bb;
+            padding: 2px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .extrato-item.used {
+            border-left-color: #e74c3c;
+            opacity: 0.8;
+        }
+
+        .item-info strong {
+            font-size: 1.05rem;
+            color: #333;
+        }
+
+        .item-info .sep {
+            color: #aaa;
+            margin: 0 4px;
+            font-size: 0.9rem;
+        }
+
+        .item-info span {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .status-badge {
+            background: #4caf50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-badge.used {
+            background: #e74c3c;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #777;
+            margin-top: 50px;
+            font-size: 1.1rem;
+        }
+
+        /* Clear Balance Styles */
+        .btn-clear-saldo {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-clear-saldo:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-clear-saldo.hidden {
+            display: none;
+        }
+
+        /* Warning Modal Styles */
+        .warning-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .warning-modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .warning-modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 350px;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transform: scale(1);
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .warning-modal-overlay.hidden .warning-modal-content {
+            transform: scale(0.9);
+        }
+
+        .warning-icon {
+            color: #e74c3c;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .warning-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .warning-text {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .warning-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-cancel,
+        .btn-confirm {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel {
+            background: #f1f1f1;
+            color: #555;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-confirm {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #c0392b;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .summary-card.abono {
+            background: linear-gradient(135deg, #10a37f 0%, #0d8a6b 100%);
+        }
+
+        .summary-card.tre {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div id="logo-container">
+                <img src="./352401712_1005867357243527_3584881947950458227_n.png" class="logo" alt="logo">
+            </div>
+            <p class="current-date">Extrato de Folgas</p>
+            <div class="icons">
+                <span class="material-symbols-rounded">account_balance_wallet</span>
+            </div>
+        </header>
+
+        <div class="extrato-container">
+            <h2 class="extrato-title">Meu Saldo</h2>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <span class="summary-value" id="resumo-folgas">0</span>
+                    <span class="summary-label">Folgas Padrão</span>
+                </div>
+                <div class="summary-card tre">
+                    <span class="summary-value" id="resumo-tre">0</span>
+                    <span class="summary-label">Saldo TRE</span>
+                </div>
+                <div class="summary-card abono">
+                    <span class="summary-value" id="resumo-abonos">5</span>
+                    <span class="summary-label">Abonos do Ano</span>
+                </div>
+            </div>
+
+            <ul id="historico-folgas" class="extrato-list">
+                <!-- Rendered via JS -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="bottom-controls-container">
+        <a href="index.html" class="bottom-btn-round" title="Voltar ao Menu">
+            <span class="material-symbols-rounded">home</span>
+        </a>
+        <button id="btn-open-tre" class="bottom-btn-round" title="Adicionar Folgas TRE">
+            <span class="btn-text" style="font-weight: 900; font-size: 16px;">TRE</span>
+        </button>
+        <button id="btn-open-clear" class="bottom-btn-round danger hidden" title="Limpar Saldo">
+            <span class="material-symbols-rounded">delete_outline</span>
+        </button>
+    </div>
+
+    <!-- TRE Modal Overlay -->
+    <div id="tre-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-tre-title">Adicionar Folgas TRE</h3>
+                <button class="close-modal-tre"><span class="material-symbols-rounded">close</span></button>
+            </div>
+
+            <div class="modal-body" style="padding: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label for="tre-year"
+                        style="display: block; margin-bottom: 5px; font-weight: bold; color: #3f66bb;">Ano de
+                        Aquisição:</label>
+                    <input type="number" id="tre-year" min="2000" max="2100" value="2026"
+                        style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="tre-quantity"
+                        style="display: block; margin-bottom: 5px; font-weight: bold; color: #3f66bb;">Quantidade de
+                        Folgas:</label>
+                    <input type="number" id="tre-quantity" min="1" max="100" value="1"
+                        style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
+                </div>
+
+                <div class="save-btn-container" style="justify-content: flex-end;">
+                    <button class="save-btn-round" id="save-tre" title="Salvar Folgas TRE">
+                        <span class="material-symbols-rounded">save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div id="clear-warning-modal" class="warning-modal-overlay hidden">
+        <div class="warning-modal-content">
+            <span class="material-symbols-rounded warning-icon">warning</span>
+            <h3 class="warning-title">Limpar Histórico?</h3>
+            <p class="warning-text">Tem certeza que deseja apagar todo o seu histórico de folgas e abonos? <strong>Esta
+                    ação não poderá ser desfeita.</strong></p>
+            <div class="warning-actions">
+                <button id="btn-cancel-clear" class="btn-cancel">Cancelar</button>
+                <button id="btn-confirm-clear" class="btn-confirm">Sim, limpar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const historicoList = document.getElementById('historico-folgas');
+            const btnOpenClear = document.getElementById('btn-open-clear');
+            const warningModal = document.getElementById('clear-warning-modal');
+            const btnCancelClear = document.getElementById('btn-cancel-clear');
+            const btnConfirmClear = document.getElementById('btn-confirm-clear');
+
+            const valFolgas = document.getElementById('resumo-folgas');
+            const valAbonos = document.getElementById('resumo-abonos');
+            const valTre = document.getElementById('resumo-tre');
+
+            // TRE Controls
+            const treModal = document.getElementById('tre-modal');
+            const btnOpenTre = document.getElementById('btn-open-tre');
+            const closeModalTreBtn = document.querySelector('.close-modal-tre');
+            const saveTreBtn = document.getElementById('save-tre');
+            const treYearInput = document.getElementById('tre-year');
+            const treQuantityInput = document.getElementById('tre-quantity');
+
+            let folgasState = JSON.parse(localStorage.getItem('saldoFolgas')) || [];
+            const currentYear = new Date().getFullYear().toString();
+
+            function saveState() {
+                localStorage.setItem('saldoFolgas', JSON.stringify(folgasState));
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return "";
+                const parts = dateStr.split('-');
+                if (parts.length !== 3) return dateStr;
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+
+            function renderExtrato() {
+                historicoList.innerHTML = '';
+
+                // Compute Summaries
+                let availableFolgas = 0;
+                let availableTre = 0;
+                let usedAbonosThisYear = 0;
+
+                folgasState.forEach(f => {
+                    if (!f.used && f.type !== 'Abono' && f.type !== 'TRE') availableFolgas++;
+                    if (!f.used && f.type === 'TRE') availableTre++;
+                    if (f.type === 'Abono' && f.year === currentYear && f.used) usedAbonosThisYear++;
+                });
+
+                valFolgas.innerText = availableFolgas;
+                valTre.innerText = availableTre;
+                valAbonos.innerText = Math.max(0, 5 - usedAbonosThisYear);
+
+                if (folgasState.length === 0) {
+                    historicoList.innerHTML = '<div class="empty-state">Você ainda não possui movimentações no histórico.</div>';
+                    btnOpenClear.classList.add('hidden');
+                    return;
+                }
+
+                btnOpenClear.classList.remove('hidden');
+
+                // Sort descending by acquisition date (or usedDate/year for Abonos/TRE)
+                const sortedFolgas = [...folgasState].sort((a, b) => {
+                    const dateA = a.type === 'Abono' ? a.usedDate : (a.date || String(a.year));
+                    const dateB = b.type === 'Abono' ? b.usedDate : (b.date || String(b.year));
+                    return new Date(dateB) - new Date(dateA);
+                });
+
+                sortedFolgas.forEach(folga => {
+                    const li = document.createElement('li');
+                    li.className = `extrato-item ${folga.used ? 'used' : ''}`;
+
+                    const statusText = folga.used ? 'Utilizada' : 'Disponível';
+                    const badgeClass = folga.used ? 'status-badge used' : 'status-badge';
+
+                    let usedMarkup = '';
+                    if (folga.used && folga.usedDate) {
+                        usedMarkup = `<span class="sep">|</span><span>Abatida dia: ${formatDate(folga.usedDate)}</span>`;
+                    }
+
+                    let acquiredMarkup = '';
+                    let typeLabel = folga.type;
+
+                    if (folga.type === 'Abono') {
+                        typeLabel = folga.name;
+                        acquiredMarkup = `<span>Benefício Anual de ${folga.year}</span>`;
+                    } else if (folga.type === 'TRE') {
+                        typeLabel = 'Folga TRE';
+                        acquiredMarkup = `<span>Referente ao ano de ${folga.year}</span>`;
+                    } else {
+                        acquiredMarkup = `<span>Adquirida dia: ${formatDate(folga.date)}</span>`;
+                    }
+
+                    li.innerHTML = `
+            <div class="item-info">
+              <strong>${typeLabel}</strong> <span class="sep">-</span> ${acquiredMarkup} ${usedMarkup}
+            </div>
+            <div class="${badgeClass}">${statusText}</div>
+          `;
+                    historicoList.appendChild(li);
+                });
+            }
+
+            // Initial render
+            renderExtrato();
+
+            // Clear Logic
+            btnOpenClear.addEventListener('click', () => {
+                warningModal.classList.remove('hidden');
+            });
+
+            function closeModal() {
+                warningModal.classList.add('hidden');
+            }
+
+            // Cancel clearing
+            btnCancelClear.addEventListener('click', closeModal);
+
+            warningModal.addEventListener('click', (e) => {
+                if (e.target === warningModal) closeModal();
+            });
+
+            // Confirm clearing
+            btnConfirmClear.addEventListener('click', () => {
+                localStorage.removeItem('saldoFolgas');
+                folgasState = [];
+                renderExtrato();
+                closeModal();
+            });
+
+            // --- TRE Logic ---
+            btnOpenTre.addEventListener('click', () => {
+                treYearInput.value = currentYear;
+                treQuantityInput.value = 1;
+                treModal.classList.remove('hidden');
+            });
+
+            function closeTreModal() {
+                treModal.classList.add('hidden');
+            }
+
+            closeModalTreBtn.addEventListener('click', closeTreModal);
+            treModal.addEventListener('click', (e) => {
+                if (e.target === treModal) closeTreModal();
+            });
+
+            saveTreBtn.addEventListener('click', () => {
+                const year = treYearInput.value;
+                const qty = parseInt(treQuantityInput.value, 10);
+
+                if (!year || isNaN(qty) || qty <= 0) {
+                    alert("Por favor, preencha o ano e uma quantidade válida.");
+                    return;
+                }
+
+                for (let i = 0; i < qty; i++) {
+                    folgasState.push({
+                        id: 'tre-' + Date.now().toString() + '-' + i,
+                        type: 'TRE',
+                        year: year.toString(),
+                        used: false,
+                        usedDate: null
+                    });
+                }
+                saveState();
+                renderExtrato();
+                alert(`${qty} folga(s) TRE para o ano ${year} adicionada(s) com sucesso!`);
+                closeTreModal();
+            });
+        });
+    </script>
+</body>
+
+</html>

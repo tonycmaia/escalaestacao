@@ -1,0 +1,17 @@
+{
+  "name": "Escala Estação",
+  "short_name": "Escala",
+  "description": "Aplicativo para gerenciar escalas de trabalho e folgas",
+  "start_url": "/escalaestacao/",
+  "display": "standalone",
+  "background_color": "#202020",
+  "theme_color": "#202020",
+  "icons": [
+    {
+      "src": "352401712_1005867357243527_3584881947950458227_n.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
